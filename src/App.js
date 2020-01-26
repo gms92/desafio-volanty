@@ -47,7 +47,7 @@ export default class App extends React.Component {
     this.setState({ versions: version });
   };
 
-  //exemplo para navegar no retorno
+  //exemplo para navegar no retorno ======
   getFullData = () => {
     let brand = "FORD";
     let model = "KA";
@@ -59,7 +59,7 @@ export default class App extends React.Component {
       )
       .then(batata => console.log(">>>>>", batata.data.precoMedio));
   };
-  //exemplo para navegar no retorno
+  //exemplo para navegar no retorno ======
 
   render() {
     return this.state.brands ? (
