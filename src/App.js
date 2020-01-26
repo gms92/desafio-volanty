@@ -10,7 +10,10 @@ export default class App extends React.Component {
       brand: null,
       models: null,
       model: null,
-      years: ""
+      years: null,
+      year: null,
+      versions: null,
+      version: null
     };
   }
 
@@ -43,8 +46,28 @@ export default class App extends React.Component {
   };
 
   getVersion = e => {
-    let version = e.target.value;
-    this.setState({ versions: version });
+    let year = e.target.value;
+    this.setState({ year: year });
+    let model = this.state.model;
+    let brand = this.state.brand;
+    axios
+      .get(
+        `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions`
+      )
+      .then(data => this.setState({ versions: data.data }));
+  };
+
+  getPrice = () => {
+    let year = this.state.year;
+    let model = this.state.model;
+    let brand = this.state.brand;
+    let version = this.state.version;
+
+    axios
+      .get(
+        `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions/${version}`
+      )
+      .then(data => console.log(">>>>>", data.data.precoMedio));
   };
 
   //exemplo para navegar no retorno ======
@@ -57,14 +80,13 @@ export default class App extends React.Component {
       .get(
         `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions/${version}`
       )
-      .then(batata => console.log(">>>>>", batata.data.precoMedio));
+      .then(data => console.log(">>>>>", data.data.precoMedio));
   };
   //exemplo para navegar no retorno ======
 
   render() {
     return this.state.brands ? (
       <div>
-        <button onClick={this.getFullData}>GET FULL</button>
         <select onChange={this.getModel}>
           {this.state.brands ? (
             this.state.brands.map((brand, i) => (
@@ -78,7 +100,6 @@ export default class App extends React.Component {
         </select>
         {this.state.models ? (
           <div>
-            <h1>SELECIONE O 2º</h1>
             <select onChange={this.getYear}>
               {this.state.models ? (
                 this.state.models.map((model, i) => (
@@ -92,51 +113,24 @@ export default class App extends React.Component {
             </select>
           </div>
         ) : (
-          " "
+          ""
         )}
+
         <div>
-          {this.state.years ? (
-            this.state.years.map((year, i) => <p key={i}>{year}</p>)
-          ) : (
-            <p> Nao tem nao</p>
-          )}
+          <select onChange={this.getVersion}>
+            {this.state.years
+              ? this.state.years.map((year, i) => (
+                  <option key={i} value={year}>
+                    {year}
+                  </option>
+                ))
+              : ""}
+          </select>
+          <button onClick={this.getPrice}>VER O PREÇO</button>
         </div>
       </div>
     ) : (
-      "Nao tenho"
+      ""
     );
   }
 }
-
-/*
-function App(){
-  return (
-    
-    
-      <>
-      <DropdownButton id="dropdown-basic-button" title="MARCA">
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-      </DropdownButton>
-
-      <DropdownButton id="dropdown-basic-button" title="MODELO">
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-      </DropdownButton>
-      <DropdownButton id="dropdown-basic-button" title="ANO">
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-      </DropdownButton>
-      </>
-    );
-}
-
-axios.get ("https://volanty-price-api.herokuapp.com/brands").then (function(data){
-  console.log(data);
-});
-
-export default App;
-*/
