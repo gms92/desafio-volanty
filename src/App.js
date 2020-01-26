@@ -13,7 +13,8 @@ export default class App extends React.Component {
       years: null,
       year: null,
       versions: null,
-      version: null
+      version: null,
+      versionId: null
     };
   }
 
@@ -57,17 +58,18 @@ export default class App extends React.Component {
       .then(data => this.setState({ versions: data.data }));
   };
 
-  getPrice = () => {
+  getCar = e => {
     let year = this.state.year;
     let model = this.state.model;
     let brand = this.state.brand;
-    let version = this.state.version;
+    let versionId = e.target.value;
+    this.setState({ versionId: versionId });
 
     axios
       .get(
-        `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions/${version}`
+        `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions/${versionId}`
       )
-      .then(data => console.log(">>>>>", data.data.precoMedio));
+      .then(data => this.setState({ versionId: data.data }));
   };
 
   //exemplo para navegar no retorno ======
@@ -126,7 +128,18 @@ export default class App extends React.Component {
                 ))
               : ""}
           </select>
-          <button onClick={this.getPrice}>VER O PREÇO</button>
+        </div>
+
+        <div>
+          <select onChange={this.getCar}>
+            {this.state.versionId
+              ? this.state.versionId.map((versionId, i) => (
+                  <option key={i} value={versionId}>
+                    {versionId}
+                  </option>
+                ))
+              : ""}
+          </select>
         </div>
       </div>
     ) : (
