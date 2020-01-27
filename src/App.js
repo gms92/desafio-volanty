@@ -1,5 +1,5 @@
 import React from "react";
-import { DropdownButton, Dropdown } from "react-bootstrap";
+import CarouselHome from "./components/CarouselHome";
 var axios = require("axios");
 
 export default class App extends React.Component {
@@ -72,6 +72,20 @@ export default class App extends React.Component {
       .then(data => this.setState({ versionId: data.data }));
   };
 
+  getPrice = () => {
+    let year = this.state.year;
+    let model = this.state.model;
+    let brand = this.state.brand;
+    let versionId = this.state.versionId;
+    this.setState({ versionId: versionId });
+    console.log(brand, model, year, versionId);
+    axios
+      .get(
+        `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions/${versionId}`
+      )
+      .then(data => console.log({ versionId: data.data.precoMedio }));
+  };
+
   //exemplo para navegar no retorno ======
   getFullData = () => {
     let brand = "FORD";
@@ -132,15 +146,17 @@ export default class App extends React.Component {
 
         <div>
           <select onChange={this.getCar}>
-            {this.state.versionId
-              ? this.state.versionId.map((versionId, i) => (
-                  <option key={i} value={versionId}>
-                    {versionId}
+            {this.state.versions
+              ? this.state.versions.map((version, i) => (
+                  <option key={i} value={version.versionId}>
+                    {version.version}
                   </option>
                 ))
               : ""}
           </select>
         </div>
+
+        <button onClick={this.getPrice}>VER O PREÇO</button>
       </div>
     ) : (
       ""
