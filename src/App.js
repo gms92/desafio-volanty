@@ -1,5 +1,4 @@
 import React from "react";
-import CarouselHome from "./components/CarouselHome";
 var axios = require("axios");
 
 export default class App extends React.Component {
@@ -14,11 +13,11 @@ export default class App extends React.Component {
       year: null,
       versions: null,
       version: null,
-      versionId: null
+      versionId: null,
+      price: null
     };
   }
 
-  //Executado na criação do componente (Página) - executado de forma instantanea
   componentDidMount() {
     axios
       .get("https://volanty-price-api.herokuapp.com/brands")
@@ -64,45 +63,18 @@ export default class App extends React.Component {
     let brand = this.state.brand;
     let versionId = e.target.value;
     this.setState({ versionId: versionId });
-
-    axios
-      .get(
-        `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions/${versionId}`
-      )
-      .then(data => this.setState({ versionId: data.data }));
-  };
-
-  getPrice = () => {
-    let year = this.state.year;
-    let model = this.state.model;
-    let brand = this.state.brand;
-    let versionId = this.state.versionId;
-    this.setState({ versionId: versionId });
     console.log(brand, model, year, versionId);
     axios
       .get(
         `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions/${versionId}`
       )
-      .then(data => console.log({ versionId: data.data.precoMedio }));
+      .then(data => this.setState({ price: data.data.precoMedio, brand }));
   };
-
-  //exemplo para navegar no retorno ======
-  getFullData = () => {
-    let brand = "FORD";
-    let model = "KA";
-    let year = "2018";
-    let version = "d1fc709679212da44303cdc1c019054e";
-    axios
-      .get(
-        `https://volanty-price-api.herokuapp.com/brands/${brand}/models/${model}/years/${year}/versions/${version}`
-      )
-      .then(data => console.log(">>>>>", data.data.precoMedio));
-  };
-  //exemplo para navegar no retorno ======
 
   render() {
     return this.state.brands ? (
       <div>
+        <h1>QUANTO VALE MEU CARRO?</h1>
         <select onChange={this.getModel}>
           {this.state.brands ? (
             this.state.brands.map((brand, i) => (
@@ -131,7 +103,6 @@ export default class App extends React.Component {
         ) : (
           ""
         )}
-
         <div>
           <select onChange={this.getVersion}>
             {this.state.years
@@ -143,7 +114,6 @@ export default class App extends React.Component {
               : ""}
           </select>
         </div>
-
         <div>
           <select onChange={this.getCar}>
             {this.state.versions
@@ -155,8 +125,11 @@ export default class App extends React.Component {
               : ""}
           </select>
         </div>
-
-        <button onClick={this.getPrice}>VER O PREÇO</button>
+        <h1>INFORMAÇÕES DO VEÍCULO:</h1>
+        <p>Marca:{this.state.brand}</p>
+        <p>Modelo:{this.state.model}</p>
+        <p>Ano:{this.state.year}</p>
+        <p>Preço:{this.state.price}R$</p>
       </div>
     ) : (
       ""
