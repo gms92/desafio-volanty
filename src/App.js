@@ -1,3 +1,4 @@
+import volanty from "../src/volantylogo.png";
 import React from "react";
 var axios = require("axios");
 
@@ -73,8 +74,9 @@ export default class App extends React.Component {
 
   render() {
     return this.state.brands ? (
-      <div>
-        <h1>QUANTO VALE MEU CARRO?</h1>
+      <div style={{ backgroundColor: "#255C9B" }}>
+        <h1 style={{ color: "#fff" }}>DESAFIO VOLANTY</h1>
+        <h2 style={{ color: "#fff" }}>QUANTO VALE MEU CARRO?</h2>
         <select onChange={this.getModel}>
           {this.state.brands ? (
             this.state.brands.map((brand, i) => (
@@ -125,11 +127,14 @@ export default class App extends React.Component {
               : ""}
           </select>
         </div>
-        <h1>INFORMAÇÕES DO VEÍCULO:</h1>
-        <p>Marca:{this.state.brand}</p>
-        <p>Modelo:{this.state.model}</p>
-        <p>Ano:{this.state.year}</p>
-        <p>Preço:{this.state.price}R$</p>
+        <h2 style={{ color: "#fff" }}>INFORMAÇÕES DO VEÍCULO:</h2>
+        <p style={{ fontSize: 30, color: "#fff" }}> Marca:{this.state.brand}</p>
+        <p style={{ fontSize: 30, color: "#fff" }}>Modelo:{this.state.model}</p>
+        <p style={{ fontSize: 30, color: "#fff" }}>Ano:{this.state.year}</p>
+        <p style={{ fontSize: 30, color: "#fff" }}>
+          Preço:{this.state.price}R$
+        </p>
+        <img src={volanty}></img>
       </div>
     ) : (
       ""
